@@ -35,6 +35,53 @@ Import Libraries: Bring in the necessary libraries.
 Program to implement the multiple linear regression model for predicting car prices with cross-validation.
 Developed by: A PRAVEEN KISHORE
 RegisterNumber:  212225220074
+
+
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.metrics import mean_squared_error,r2_score,mean_absolute_error
+import matplotlib.pyplot as plt
+
+data= pd.read_csv('CarPrice_Assignment.csv')
+print(data.head())
+
+
+data=data.drop(['car_ID','CarName'],axis=1)
+data=pd.get_dummies(data,drop_first=True)
+
+
+X=data.drop('price',axis=1)
+y=data['price']
+X_train , X_test, y_train , y_test = train_test_split(X,y,test_size=0.2 ,random_state=42)
+
+
+model= LinearRegression()
+model.fit(X_train , y_train)
+
+print('Name:A PRAVEEN KISHORE')
+print('Reg No: 25010010')
+print('\n=== Cross-validation ===')
+cv_scores = cross_val_score(model,X,y,cv=5)
+print("Fold R2 :",[f"{score:.4f}" for score in cv_scores])
+print(f"Average R2: {cv_scores.mean():.4f}")
+
+
+y_pred = model.predict(X_test)
+print("\n=== Test set Performance ===")
+print(f"MSE : {mean_squared_error(y_test,y_pred):.2f}")
+print(f"R2 : {r2_score(y_test,y_pred):.4f}")
+print(f"MAE: {mean_absolute_error(y_test,y_pred):.2f}")
+
+
+plt.figure(figsize=(8,6))
+plt.scatter(y_test,y_pred,alpha=0.6)
+plt.plot([y.min(),y.max()],[y.min(),y.max()],'r--')
+plt.xlabel("Actual Price")
+plt.ylabel("Predicted Price")
+plt.title("Actual vs Predicted Prices")
+plt.grid(True)
+plt.show()
 */
 ```
 
